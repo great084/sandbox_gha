@@ -1,3 +1,5 @@
+name: リリースタグとリリースノートの作成
+
 # mainブランチに対するPRのマージ時に実行
 on:
   pull_request:
@@ -22,7 +24,7 @@ jobs:
           HEAD_BRANCH: "${{ github.event.pull_request.head.ref }}"
         run: |
           # release branch名からタグ名を抽出(例: release/20210101-001 -> 20210101-001)
-          TAG=$(echo "$HEAD_BRANCH" | grep -oP 'release/\K[\S]+'
+          TAG=$(echo "$HEAD_BRANCH" | grep -oP 'release/\K[\S]+')
           if [ -n "$TAG" ]; then
             gh release create $TAG --generate-notes
           fi
