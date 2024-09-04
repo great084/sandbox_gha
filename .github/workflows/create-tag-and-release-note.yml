@@ -1,0 +1,28 @@
+# mainブランチに対するPRのマージ時に実行
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+    types:
+      - closed
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create release tag and note
+        id: create_release_tag_and_note
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_BRANCH: "${{ github.event.pull_request.head.ref }}"
+        run: |
+          # release branch名からタグ名を抽出(例: release/20210101-001 -> 20210101-001)
+          TAG=$(echo "$HEAD_BRANCH" | grep -oP 'release/\K[\S]+'
+          if [ -n "$TAG" ]; then
+            gh release create $TAG --generate-notes
+          fi
