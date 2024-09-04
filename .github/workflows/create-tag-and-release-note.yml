@@ -10,7 +10,7 @@ on:
       - closed
 
 jobs:
-  build:
+  create-release-tag-and-note:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
